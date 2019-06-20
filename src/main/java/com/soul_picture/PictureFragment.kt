@@ -1,7 +1,6 @@
 package com.soul_picture
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import com.kotlin_baselib.base.BaseFragment
 import com.kotlin_baselib.base.EmptyModelImpl
 import com.kotlin_baselib.base.EmptyPresenterImpl
@@ -36,11 +35,11 @@ class PictureFragment : BaseFragment<EmptyView, EmptyModelImpl, EmptyPresenterIm
     companion object {
         @JvmStatic
         fun newInstance(param1: String) =
-            PictureFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
+                PictureFragment().apply {
+                    arguments = Bundle().apply {
+                        putString(ARG_PARAM1, param1)
+                    }
                 }
-            }
     }
 
     override fun getResId(): Int {
