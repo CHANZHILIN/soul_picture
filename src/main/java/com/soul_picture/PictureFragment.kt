@@ -5,7 +5,6 @@ import com.kotlin_baselib.base.BaseFragment
 import com.kotlin_baselib.base.EmptyModelImpl
 import com.kotlin_baselib.base.EmptyPresenterImpl
 import com.kotlin_baselib.base.EmptyView
-import kotlinx.android.synthetic.main.fragment_picture.*
 
 
 private const val ARG_PARAM1 = "param1"
@@ -14,7 +13,7 @@ private const val ARG_PARAM1 = "param1"
  *  Created by CHEN on 2019/6/20
  *  Email:1181785848@qq.com
  *  Package:com.soul_picture
- *  Introduce:
+ *  Introduce: 图片
  **/
 class PictureFragment : BaseFragment<EmptyView, EmptyModelImpl, EmptyPresenterImpl>(), EmptyView {
 
@@ -47,10 +46,11 @@ class PictureFragment : BaseFragment<EmptyView, EmptyModelImpl, EmptyPresenterIm
     }
 
     override fun initData() {
-        fragment_text.setText(param1)
+
     }
 
     override fun initListener() {
+
     }
 
     override fun lazyLoad() {
