@@ -1,10 +1,8 @@
 package com.soul_picture
 
 import android.os.Bundle
-import com.kotlin_baselib.base.BaseFragment
-import com.kotlin_baselib.base.EmptyModelImpl
-import com.kotlin_baselib.base.EmptyPresenterImpl
-import com.kotlin_baselib.base.EmptyView
+import com.kotlin_baselib.mvvmbase.BaseViewModelFragment
+import com.kotlin_baselib.mvvmbase.EmptyViewModel
 
 
 private const val ARG_PARAM1 = "param1"
@@ -15,11 +13,10 @@ private const val ARG_PARAM1 = "param1"
  *  Package:com.soul_picture
  *  Introduce: 图片
  **/
-class PictureFragment : BaseFragment<EmptyView, EmptyModelImpl, EmptyPresenterImpl>(), EmptyView {
+class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
 
-    override fun createPresenter(): EmptyPresenterImpl {
-        return EmptyPresenterImpl(this)
-    }
+    override fun providerVMClass(): Class<EmptyViewModel>? = EmptyViewModel::class.java
+
 
     private var param1: String? = null
 
@@ -51,8 +48,5 @@ class PictureFragment : BaseFragment<EmptyView, EmptyModelImpl, EmptyPresenterIm
 
     override fun initListener() {
 
-    }
-
-    override fun lazyLoad() {
     }
 }
