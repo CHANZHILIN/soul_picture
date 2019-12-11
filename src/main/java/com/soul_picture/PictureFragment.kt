@@ -1,16 +1,21 @@
 package com.soul_picture
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.app.ActivityOptionsCompat
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.kotlin_baselib.api.Constants
 import com.kotlin_baselib.base.BaseViewModelFragment
 import com.kotlin_baselib.base.EmptyViewModel
-import com.kotlin_baselib.recyclerview.ListItem
-import com.kotlin_baselib.recyclerview.ListItemAdapter
-import com.kotlin_baselib.recyclerview.setMutiUp
-import com.kotlin_baselib.utils.SnackbarUtil
+import com.kotlin_baselib.glide.GlideUtil
+import com.kotlin_baselib.recyclerview.decoration.StaggeredDividerItemDecoration
+import com.kotlin_baselib.recyclerview.setSingleUp
+import com.kotlin_baselib.utils.SdCardUtil
+import com.soul_picture.activity.PictureDetailActivity
+import com.soul_picture.entity.PictureEntity
 import kotlinx.android.synthetic.main.fragment_picture.*
 import kotlinx.android.synthetic.main.layout_item_picture.view.*
-import kotlinx.android.synthetic.main.layout_item_picture2.view.*
 
 
 private const val ARG_PARAM1 = "param1"
@@ -22,6 +27,20 @@ private const val ARG_PARAM1 = "param1"
  *  Introduce: 图片
  **/
 class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
+
+
+    companion object {
+
+
+        @JvmStatic
+        fun newInstance(param1: String) =
+            PictureFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                }
+            }
+    }
+
 
     override fun providerVMClass(): Class<EmptyViewModel>? = EmptyViewModel::class.java
 
@@ -37,42 +56,60 @@ class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
     }
 
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String) =
-            PictureFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                }
-            }
-    }
-
-
     override fun initData() {
-        val data = ArrayList<Int>()
-        for (i in 0..100) {
-            data.add(i)
+        val pictureSrc = SdCardUtil.DEFAULT_PHOTO_PATH;
+        val fileData = SdCardUtil.getFilesAllName(pictureSrc)
+
+        val pictureData = ArrayList<PictureEntity>()
+        for (fileDatum in fileData) {   //封装实体类，加入随机高度，解决滑动过程中位置变换的问题
+            pictureData.add(PictureEntity(fileDatum, (200 + Math.random() * 400).toInt()))
         }
-//        fragment_picture_recyclerview.adapter =
-//            FragmentPictureAdapter(data, R.layout.layout_item_picture)
-//        fragment_picture_recyclerview.layoutManager = LinearLayoutManager(mContext)
-        /*       fragment_picture_recyclerview.setSingleUp(
-                   data,
-                   R.layout.layout_item_picture,
-                   LinearLayoutManager(mContext),
-                   { holder, item ->
-                       holder.itemView.tv_name.text = "你好${item}"
-                   },
-                   {
-                       SnackbarUtil.ShortSnackbar(
-                           fragment_picture_recyclerview,
-                           "点击${it}！",
-                           SnackbarUtil.CONFIRM
-                       )
-                           .show()
-                   }
-               )*/
-        val adaptedUsers = data.mapIndexed { index, user ->
+
+        fragment_picture_recyclerview.setSingleUp(
+            pictureData,
+            R.layout.layout_item_picture,
+            StaggeredGridLayoutManager(Constants.SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL),
+            { holder, item ->
+                val width =
+                    (holder.itemView.item_picture_iv_image.getContext() as Activity).windowManager.defaultDisplay.width //获取屏幕宽度
+                val params = holder.itemView.item_picture_iv_image.getLayoutParams()
+                //设置图片的相对于屏幕的宽高比
+                params.width =
+                    (width - (Constants.SPAN_COUNT + 1) * Constants.ITEM_SPACE) / Constants.SPAN_COUNT
+                params.height = item.randomHeight
+
+                GlideUtil.instance.loadImage(
+                    mContext,
+                    item.picturePath,
+                    holder.itemView.item_picture_iv_image
+                )
+                holder.itemView.item_picture_iv_image.setOnClickListener {
+                    val i = Intent(mContext, PictureDetailActivity::class.java)
+                    val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        mContext,
+                        holder.itemView.item_picture_iv_image,
+                        "image"
+                    )
+                    i.putExtra("keyImage", item.picturePath)
+                    startActivity(i, optionsCompat.toBundle())
+                }
+            },
+            {
+                /*     SnackbarUtil.ShortSnackbar(
+                         fragment_picture_recyclerview,
+                         "点击${it.picturePath}！",
+                         SnackbarUtil.CONFIRM
+                     )
+                         .show()*/
+            }
+        )
+        fragment_picture_recyclerview.addItemDecoration(
+            StaggeredDividerItemDecoration(
+                mContext,
+                Constants.ITEM_SPACE
+            )
+        )
+/*        val adaptedUsers = data.mapIndexed { index, user ->
             ListItemAdapter(
                 user,
                 if (data.get(index) % 2 == 0) R.layout.layout_item_picture else R.layout.layout_item_picture2
@@ -103,7 +140,7 @@ class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
                             .show()
                     })
             )
-        )
+        )*/
     }
 
     override fun initListener() {
