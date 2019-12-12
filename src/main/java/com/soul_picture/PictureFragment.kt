@@ -46,6 +46,8 @@ class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
 
     override fun getResId(): Int = R.layout.fragment_picture
 
+    private lateinit var pictureData: MutableList<PictureEntity>
+    private lateinit var fileData: MutableList<String>
     private var param1: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,10 +59,11 @@ class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
 
 
     override fun initData() {
-        val pictureSrc = SdCardUtil.DEFAULT_PHOTO_PATH;
-        val fileData = SdCardUtil.getFilesAllName(pictureSrc)
 
-        val pictureData = ArrayList<PictureEntity>()
+
+         fileData = SdCardUtil.getFilesAllName(SdCardUtil.DEFAULT_PHOTO_PATH)
+
+         pictureData = ArrayList<PictureEntity>()
         for (fileDatum in fileData) {   //封装实体类，加入随机高度，解决滑动过程中位置变换的问题
             pictureData.add(PictureEntity(fileDatum, (200 + Math.random() * 400).toInt()))
         }
@@ -144,7 +147,19 @@ class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
     }
 
     override fun initListener() {
+        fragment_picture_refresh_layout.setOnRefreshListener {
+            if (fileData.size >= 0) {
+                fileData.clear()
+                pictureData.clear()
+            }
+            fileData = SdCardUtil.getFilesAllName(SdCardUtil.DEFAULT_PHOTO_PATH)  //重新获取一次文件
+            for (fileDatum in fileData) {
+                pictureData.add(PictureEntity(fileDatum,(200 + Math.random() * 400).toInt()))
+            }
+            fragment_picture_recyclerview.adapter!!.notifyDataSetChanged()
 
+            fragment_picture_refresh_layout.isRefreshing = false
+        }
     }
 
 

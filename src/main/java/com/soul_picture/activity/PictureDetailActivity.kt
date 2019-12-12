@@ -1,6 +1,5 @@
 package com.soul_picture.activity
 
-import android.os.Build
 import android.view.WindowManager
 import com.kotlin_baselib.base.BaseViewModelActivity
 import com.kotlin_baselib.base.EmptyViewModel
@@ -20,18 +19,26 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
 
     override fun preSetContentView() {
         super.preSetContentView()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
+        //透明状态栏
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //透明导航栏
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+//        window.navigationBarColor
     }
 
 
     override fun initData() {
+
+        picture_detial_ll_bottom.setBackgroundColor(resources.getColor(R.color.transparent))
         val path = intent.getStringExtra("keyImage")
 
         GlideUtil.instance.loadImage(this, path, picture_detial_iv)
     }
 
     override fun initListener() {
+        picture_detial_tv_edit.setOnClickListener {
+
+        }
     }
 }
