@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:drawableTop="@mipmap/icon_edit"
             android:gravity="center"
-            android:text="编辑"
+            android:text="@string/edit"
             android:textColor="@color/white"
             android:textSize="12sp" />
     </LinearLayout>
