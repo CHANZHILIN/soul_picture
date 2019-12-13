@@ -1,18 +1,18 @@
-package com.soul_picture
+package com.soul_picture.main
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.ActivityOptionsCompat
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.kotlin_baselib.api.Constants
 import com.kotlin_baselib.base.BaseViewModelFragment
-import com.kotlin_baselib.base.EmptyViewModel
 import com.kotlin_baselib.glide.GlideUtil
 import com.kotlin_baselib.recyclerview.decoration.StaggeredDividerItemDecoration
 import com.kotlin_baselib.recyclerview.setSingleUp
-import com.kotlin_baselib.utils.SdCardUtil
-import com.soul_picture.activity.PictureDetailActivity
+import com.kotlin_baselib.utils.ScreenUtils
+import com.soul_picture.R
 import com.soul_picture.entity.PictureEntity
 import kotlinx.android.synthetic.main.fragment_picture.*
 import kotlinx.android.synthetic.main.layout_item_picture.view.*
@@ -26,7 +26,7 @@ private const val ARG_PARAM1 = "param1"
  *  Package:com.soul_picture
  *  Introduce: 图片
  **/
-class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
+class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
 
 
     companion object {
@@ -42,7 +42,7 @@ class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
     }
 
 
-    override fun providerVMClass(): Class<EmptyViewModel>? = EmptyViewModel::class.java
+    override fun providerVMClass(): Class<PictureViewModel>? = PictureViewModel::class.java
 
     override fun getResId(): Int = R.layout.fragment_picture
 
@@ -59,22 +59,15 @@ class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
 
 
     override fun initData() {
+        pictureData = ArrayList<PictureEntity>()
 
-
-         fileData = SdCardUtil.getFilesAllName(SdCardUtil.DEFAULT_PHOTO_PATH)
-
-         pictureData = ArrayList<PictureEntity>()
-        for (fileDatum in fileData) {   //封装实体类，加入随机高度，解决滑动过程中位置变换的问题
-            pictureData.add(PictureEntity(fileDatum, (200 + Math.random() * 400).toInt()))
-        }
-
+        showLoading()
         fragment_picture_recyclerview.setSingleUp(
             pictureData,
             R.layout.layout_item_picture,
             StaggeredGridLayoutManager(Constants.SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL),
             { holder, item ->
-                val width =
-                    (holder.itemView.item_picture_iv_image.getContext() as Activity).windowManager.defaultDisplay.width //获取屏幕宽度
+                val width = ScreenUtils.instance.getScreenWidth() //获取屏幕宽度
                 val params = holder.itemView.item_picture_iv_image.getLayoutParams()
                 //设置图片的相对于屏幕的宽高比
                 params.width =
@@ -112,6 +105,14 @@ class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
                 Constants.ITEM_SPACE
             )
         )
+
+        viewModel.getPictureListData().observe(this, Observer {
+            it?.run {
+                pictureData.addAll(it)
+                fragment_picture_recyclerview.adapter!!.notifyDataSetChanged()
+                hideLoading()
+            }
+        })
 /*        val adaptedUsers = data.mapIndexed { index, user ->
             ListItemAdapter(
                 user,
@@ -148,17 +149,20 @@ class PictureFragment : BaseViewModelFragment<EmptyViewModel>() {
 
     override fun initListener() {
         fragment_picture_refresh_layout.setOnRefreshListener {
-            if (fileData.size >= 0) {
-                fileData.clear()
-                pictureData.clear()
-            }
-            fileData = SdCardUtil.getFilesAllName(SdCardUtil.DEFAULT_PHOTO_PATH)  //重新获取一次文件
-            for (fileDatum in fileData) {
-                pictureData.add(PictureEntity(fileDatum,(200 + Math.random() * 400).toInt()))
-            }
-            fragment_picture_recyclerview.adapter!!.notifyDataSetChanged()
+            val pictureViewModel = PictureViewModel()
+            pictureViewModel.getPictureListData().observe(this, Observer {
+                it?.run {
+                    if (pictureData.size >= 0) {
+                        pictureData.clear()
+                    }
+                    pictureData.addAll(it)
+                    fragment_picture_recyclerview.adapter!!.notifyDataSetChanged()
+                    fragment_picture_refresh_layout.isRefreshing = false
+                    lifecycle.removeObserver(pictureViewModel)
+                }
+            })
 
-            fragment_picture_refresh_layout.isRefreshing = false
+
         }
     }
 

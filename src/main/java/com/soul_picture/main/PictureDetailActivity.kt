@@ -1,9 +1,12 @@
-package com.soul_picture.activity
+package com.soul_picture.main
 
+import android.view.Gravity
 import android.view.WindowManager
+import android.widget.FrameLayout
 import com.kotlin_baselib.base.BaseViewModelActivity
 import com.kotlin_baselib.base.EmptyViewModel
 import com.kotlin_baselib.glide.GlideUtil
+import com.kotlin_baselib.utils.ScreenUtils
 import com.soul_picture.R
 import kotlinx.android.synthetic.main.activity_picture_detail.*
 
@@ -24,13 +27,17 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
         //透明导航栏
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
-//        window.navigationBarColor
     }
 
 
     override fun initData() {
+        if (ScreenUtils.instance.checkDeviceHasNavigationBar()) {   //有虚拟导航栏
 
-        picture_detial_ll_bottom.setBackgroundColor(resources.getColor(R.color.transparent))
+            val params = FrameLayout.LayoutParams(picture_detial_ll_bottom.layoutParams)
+            params.gravity = Gravity.BOTTOM
+            params.bottomMargin = ScreenUtils.instance.getNavigationBarHeight()
+            picture_detial_ll_bottom.layoutParams = params
+        }
         val path = intent.getStringExtra("keyImage")
 
         GlideUtil.instance.loadImage(this, path, picture_detial_iv)

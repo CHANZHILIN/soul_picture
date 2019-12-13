@@ -11,22 +11,30 @@
         android:scaleType="centerCrop"
         android:transitionName="image" />
 
-    <LinearLayout
-        android:id="@+id/picture_detial_ll_bottom"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:padding="8dp">
+        android:background="@color/black_transparent">
 
-        <TextView
-            android:id="@+id/picture_detial_tv_edit"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/picture_detial_ll_bottom"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableTop="@mipmap/icon_edit"
-            android:gravity="center"
-            android:text="@string/edit"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-    </LinearLayout>
+            android:layout_gravity="bottom"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/picture_detial_tv_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@mipmap/icon_edit"
+                android:gravity="center"
+                android:text="@string/edit"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </FrameLayout>
 
 </FrameLayout>
