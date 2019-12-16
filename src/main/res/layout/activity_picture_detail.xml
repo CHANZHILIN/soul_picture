@@ -2,13 +2,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     android:orientation="vertical">
 
-    <ImageView
+    <com.kotlin_baselib.view.ResizableImageView
         android:id="@+id/picture_detial_iv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:transitionName="image" />
 
     <FrameLayout
