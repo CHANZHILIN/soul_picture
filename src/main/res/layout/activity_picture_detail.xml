@@ -5,6 +5,18 @@
     android:background="@color/black"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/picture_detial_tv_switch_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginTop="40dp"
+        android:padding="8dp"
+        android:text="切换颜色"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
     <com.kotlin_baselib.view.ResizableImageView
         android:id="@+id/picture_detial_iv"
         android:layout_width="match_parent"
@@ -18,23 +30,22 @@
         android:layout_gravity="bottom"
         android:background="@color/black_transparent">
 
-        <LinearLayout
-            android:id="@+id/picture_detial_ll_bottom"
+
+        <FrameLayout
+            android:id="@+id/picture_detial_fl_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:padding="8dp">
+            android:layout_gravity="bottom">
 
-            <TextView
-                android:id="@+id/picture_detial_tv_edit"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/picture_detial_rv"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableTop="@mipmap/icon_edit"
-                android:gravity="center"
-                android:text="@string/edit"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:scrollbars="horizontal" />
+
+            <!--添加一些bottom view-->
+
+        </FrameLayout>
 
     </FrameLayout>
 
