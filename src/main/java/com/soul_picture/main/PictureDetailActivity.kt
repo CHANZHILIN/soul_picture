@@ -23,6 +23,7 @@ import com.soul_picture.R
 import kotlinx.android.synthetic.main.activity_picture_detail.*
 import kotlinx.android.synthetic.main.layout_item_picture_detail_edit_bottom.view.*
 
+
 /**
  *  Created by CHEN on 2019/12/11
  *  Email:1181785848@qq.com
@@ -97,6 +98,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                     isReset = false
                 }
                 if (it.equals("涂鸦")) {
+
                     val layout =
                         LayoutInflater.from(mContext).inflate(R.layout.dialog_brush_bottom, null)
                     layout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white))
@@ -155,7 +157,8 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                 .density(12)
                 .setPositiveButton(
                     "ok"
-                ) { dialog, selectedColor, allColors ->
+                )
+                { dialog, selectedColor, allColors ->
                     SnackbarUtil.ShortSnackbar(
                         picture_detial_iv,
                         "${selectedColor}",
