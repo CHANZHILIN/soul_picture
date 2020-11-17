@@ -2,15 +2,15 @@ package com.soul_picture.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.kotlin_baselib.api.Constants
 import com.kotlin_baselib.base.BaseViewModelFragment
 import com.kotlin_baselib.glide.GlideUtil
+import com.kotlin_baselib.recyclerview.SingleAdapter
 import com.kotlin_baselib.recyclerview.decoration.StaggeredDividerItemDecoration
-import com.kotlin_baselib.recyclerview.setSingleUp
+import com.kotlin_baselib.recyclerview.setSingleItemUp
 import com.kotlin_baselib.utils.ScreenUtils
 import com.soul_picture.R
 import com.soul_picture.entity.PictureEntity
@@ -30,8 +30,6 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
 
 
     companion object {
-
-
         @JvmStatic
         fun newInstance(param1: String) =
             PictureFragment().apply {
@@ -46,9 +44,9 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
 
     override fun getResId(): Int = R.layout.fragment_picture
 
-    private lateinit var pictureData: MutableList<PictureEntity>
-    private lateinit var fileData: MutableList<String>
     private var param1: String? = null
+
+    private var singleAdapter: SingleAdapter<PictureEntity>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,16 +57,13 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
 
 
     override fun initData() {
-        pictureData = ArrayList<PictureEntity>()
-
         showLoading()
-        fragment_picture_recyclerview.setSingleUp(
-            pictureData,
+        singleAdapter = fragment_picture_recyclerview.setSingleItemUp(
+            mutableListOf(),
             R.layout.layout_item_picture,
-            StaggeredGridLayoutManager(Constants.SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL),
-            { holder, item ->
+            { _, holder, item ->
                 val width = ScreenUtils.instance.getScreenWidth() //获取屏幕宽度
-                val params = holder.itemView.item_picture_iv_image.getLayoutParams()
+                val params = holder.itemView.item_picture_iv_image.layoutParams
                 //设置图片的相对于屏幕的宽高比
                 params.width =
                     (width - (Constants.SPAN_COUNT + 1) * Constants.ITEM_SPACE) / Constants.SPAN_COUNT
@@ -90,14 +85,7 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
                     startActivity(i, optionsCompat.toBundle())
                 }
             },
-            {
-                /*     SnackbarUtil.ShortSnackbar(
-                         fragment_picture_recyclerview,
-                         "点击${it.picturePath}！",
-                         SnackbarUtil.CONFIRM
-                     )
-                         .show()*/
-            }
+            StaggeredGridLayoutManager(Constants.SPAN_COUNT, StaggeredGridLayoutManager.VERTICAL)
         )
         fragment_picture_recyclerview.addItemDecoration(
             StaggeredDividerItemDecoration(
@@ -108,8 +96,7 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
 
         viewModel.getPictureListData().observe(this, Observer {
             it?.run {
-                pictureData.addAll(it)
-                fragment_picture_recyclerview.adapter!!.notifyDataSetChanged()
+                singleAdapter?.replaceData(it)
                 hideLoading()
             }
         })
@@ -119,7 +106,7 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
                 if (data.get(index) % 2 == 0) R.layout.layout_item_picture else R.layout.layout_item_picture2
             )
         }
-        fragment_picture_recyclerview.setMutiUp(adaptedUsers, LinearLayoutManager(mContext),
+        fragment_picture_recyclerview.setMultiUp(adaptedUsers, LinearLayoutManager(mContext),
             listItems = *arrayOf(ListItem(R.layout.layout_item_picture,
                 { holder, item ->
                     holder.itemView.tv_name.text = "你好${item.data}"
@@ -152,12 +139,9 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
             val pictureViewModel = PictureViewModel()
             pictureViewModel.getPictureListData().observe(this, Observer {
                 it?.run {
-                    if (pictureData.size >= 0) {
-                        pictureData.clear()
-                    }
-                    pictureData.addAll(it)
-                    fragment_picture_recyclerview.adapter!!.notifyDataSetChanged()
+                    singleAdapter?.replaceData(it)
                     fragment_picture_refresh_layout.isRefreshing = false
+
                     lifecycle.removeObserver(pictureViewModel)
                 }
             })

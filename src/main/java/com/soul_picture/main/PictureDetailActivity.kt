@@ -16,7 +16,7 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.kotlin_baselib.base.BaseViewModelActivity
 import com.kotlin_baselib.base.EmptyViewModel
 import com.kotlin_baselib.glide.GlideUtil
-import com.kotlin_baselib.recyclerview.setSingleUp
+import com.kotlin_baselib.recyclerview.setSingleItemUp
 import com.kotlin_baselib.utils.ScreenUtils
 import com.kotlin_baselib.utils.SnackbarUtil
 import com.soul_picture.R
@@ -63,14 +63,15 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
 
         data = ArrayList<String>()
         data.add("编辑")
-        picture_detial_rv.setSingleUp(
+        picture_detial_rv.setSingleItemUp(
             data,
             R.layout.layout_item_picture_detail_edit_bottom,
-            LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false),
-            { holder, item ->
+
+            { _,holder, item ->
                 holder.itemView.item_picture_detail_bottom_tv.text = item
             },
-            {
+            LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false),
+            {  position, it ->
                 if (it.equals("编辑")) {
                     val objectAnimatorX: ObjectAnimator =
                         ObjectAnimator.ofFloat(picture_detial_iv, "scaleX", 1f, 0.7f)
