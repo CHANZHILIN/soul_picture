@@ -112,10 +112,10 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
                     holder.itemView.tv_name.text = "你好${item.data}"
 
                 }, {
-                    SnackbarUtil.ShortSnackbar(
+                    SnackBarUtil.ShortSnackbar(
                         fragment_picture_recyclerview,
                         "点击${it.data}！",
-                        SnackbarUtil.CONFIRM
+                        SnackBarUtil.CONFIRM
                     )
                         .show()
                 }),
@@ -123,10 +123,10 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
                     { holder, item ->
                         holder.itemView.tv_name2.text = "他好${item.data}"
                     }, {
-                        SnackbarUtil.ShortSnackbar(
+                        SnackBarUtil.ShortSnackbar(
                             fragment_picture_recyclerview,
                             "点击${it.data}！",
-                            SnackbarUtil.CONFIRM
+                            SnackBarUtil.CONFIRM
                         )
                             .show()
                     })

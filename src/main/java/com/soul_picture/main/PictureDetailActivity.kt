@@ -18,7 +18,7 @@ import com.kotlin_baselib.base.EmptyViewModel
 import com.kotlin_baselib.glide.GlideUtil
 import com.kotlin_baselib.recyclerview.setSingleItemUp
 import com.kotlin_baselib.utils.ScreenUtils
-import com.kotlin_baselib.utils.SnackbarUtil
+import com.kotlin_baselib.utils.SnackBarUtil
 import com.soul_picture.R
 import kotlinx.android.synthetic.main.activity_picture_detail.*
 import kotlinx.android.synthetic.main.layout_item_picture_detail_edit_bottom.view.*
@@ -160,10 +160,10 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                     "ok"
                 )
                 { dialog, selectedColor, allColors ->
-                    SnackbarUtil.ShortSnackbar(
+                    SnackBarUtil.shortSnackBar(
                         picture_detial_iv,
                         "${selectedColor}",
-                        SnackbarUtil.CONFIRM
+                        SnackBarUtil.CONFIRM
                     ).show()
 //                    drawView.setPaintColor(selectedColor)
 //                    drawView.setTextColor(selectedColor)
