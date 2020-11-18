@@ -3,8 +3,8 @@
     android:id="@+id/item_picture_detail_bottom_tv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="8dp"
+    android:padding="10dp"
     android:gravity="center"
     android:text="@string/edit"
     android:textColor="@color/white"
-    android:textSize="16sp" />
+    android:textSize="20sp" />

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
@@ -9,44 +10,56 @@
         android:id="@+id/picture_detial_tv_switch_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|top"
         android:layout_marginTop="40dp"
         android:padding="8dp"
         android:text="切换颜色"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.kotlin_baselib.view.ResizableImageView
-        android:id="@+id/picture_detial_iv"
+    <com.kotlin_baselib.view.ZoomImageView
+        android:id="@+id/picture_detail_iv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:transitionName="image" />
+        android:transitionName="image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
+        android:id="@+id/picture_detial_fl_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/black_transparent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-
-        <FrameLayout
-            android:id="@+id/picture_detial_fl_bottom"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/picture_detial_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
+            android:scrollbars="horizontal" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/picture_detial_rv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="horizontal" />
-
-            <!--添加一些bottom view-->
-
-        </FrameLayout>
+        <!--添加一些bottom view-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal" />
 
     </FrameLayout>
 
-</FrameLayout>
+    <include
+        android:id="@+id/brush"
+        layout="@layout/dialog_brush_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

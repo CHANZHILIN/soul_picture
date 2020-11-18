@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <include layout="@layout/layout_dialog_toolbar" />
@@ -11,14 +13,18 @@
         android:id="@+id/dialog_bursh_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp" />
+        android:min="5"
+        android:max="100"
+        android:layout_margin="15dp" />
 
     <TextView
         android:id="@+id/dialog_bursh_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="画笔粗细"
-        android:textSize="13sp" />
+        android:layout_gravity="center"
+        android:text="画笔粗细值为：5"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
 
 </LinearLayout>
