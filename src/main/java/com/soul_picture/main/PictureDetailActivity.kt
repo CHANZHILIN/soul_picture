@@ -137,7 +137,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                             if (it){
                                 picture_detial_rv?.postDelayed({
                                     finishAfterTransition()
-                                },500)
+                                },1000)
                             }
                         }
                     }
