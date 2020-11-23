@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.kotlin_baselib.view.ZoomImageView
+    <com.kotlin_baselib.view.ResizableImageView
         android:id="@+id/picture_detail_iv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

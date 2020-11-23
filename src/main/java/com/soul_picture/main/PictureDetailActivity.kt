@@ -68,6 +68,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                     fromUser: Boolean
                 ) {
                     dialog_bursh_text?.text = "画笔粗细值为：${progress}"
+                    picture_detail_iv?.paintWidth = progress.toFloat()
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -92,6 +93,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                 brush?.postDelayed({
                     brush?.visibility = View.GONE
                 }, 200)
+                picture_detail_iv?.isGraffiti = false
             }
         brush?.findViewById<TextView>(R.id.dialog_toolbar_done)
             ?.setOnClickListener {
@@ -104,7 +106,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                 brush?.postDelayed({
                     brush?.visibility = View.GONE
                 }, 200)
-
+                picture_detail_iv?.isGraffiti = false
             }
 
 
@@ -127,17 +129,17 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                     "编辑" -> {
                         showEditBottomView()
                     }
-                    "删除" ->{
-                        SdCardUtil.deleteFile(path){
+                    "删除" -> {
+                        SdCardUtil.deleteFile(path) {
                             SnackBarUtil.shortSnackBar(
                                 picture_detail_iv,
                                 if (it) "删除图片成功" else "删除图片失败！",
                                 SnackBarUtil.CONFIRM
                             ).show()
-                            if (it){
+                            if (it) {
                                 picture_detial_rv?.postDelayed({
                                     finishAfterTransition()
-                                },1000)
+                                }, 1000)
                             }
                         }
                     }
@@ -168,7 +170,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
         picture_detial_rv?.visibility = View.VISIBLE
         rv_edit?.visibility = View.GONE
         isReset = true
-
+        picture_detail_iv?.isGraffiti = false
     }
 
     override fun initListener() {
@@ -183,6 +185,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                     "确定"
                 )
                 { dialog, selectedColor, allColors ->
+                    picture_detail_iv?.paintColor = selectedColor
                     SnackBarUtil.shortSnackBar(
                         picture_detail_iv,
                         "${selectedColor}",
@@ -217,6 +220,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                             ?.setStartDelay(100)
                             ?.start()
                         isShowDialog = true
+                        picture_detail_iv?.isGraffiti = true
                     }
                     "完成" -> {
                         reset()
@@ -255,6 +259,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
         if (isShowDialog) {
             brush?.visibility = View.GONE
             isShowDialog = false
+            picture_detail_iv?.isGraffiti = false
             return
         }
         if (!isReset) {
