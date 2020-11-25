@@ -57,7 +57,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
         path = intent.getStringExtra("keyImage")
 
         GlideUtil.instance.loadImage(this, path, picture_detail_iv)
-
+//        picture_detail_iv?.setImageUrl(path)
 
         brush.apply {
             dialog_bursh_seekbar?.setOnSeekBarChangeListener(object :
