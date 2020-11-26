@@ -2,6 +2,8 @@ package com.soul_picture.main
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Activity
+import android.content.DialogInterface
 import android.graphics.Color
 import android.view.View
 import android.view.WindowManager
@@ -15,6 +17,7 @@ import com.kotlin_baselib.base.BaseViewModelActivity
 import com.kotlin_baselib.base.EmptyViewModel
 import com.kotlin_baselib.glide.GlideUtil
 import com.kotlin_baselib.recyclerview.setSingleItemUp
+import com.kotlin_baselib.utils.AlertDialogUtil
 import com.kotlin_baselib.utils.SdCardUtil
 import com.kotlin_baselib.utils.SnackBarUtil
 import com.soul_picture.R
@@ -58,6 +61,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
 
         GlideUtil.instance.loadImage(this, path, picture_detail_iv)
 //        picture_detail_iv?.setImageUrl(path)
+
 
         brush.apply {
             dialog_bursh_seekbar?.setOnSeekBarChangeListener(object :
@@ -130,18 +134,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                         showEditBottomView()
                     }
                     "删除" -> {
-                        SdCardUtil.deleteFile(path) {
-                            SnackBarUtil.shortSnackBar(
-                                picture_detail_iv,
-                                if (it) "删除图片成功" else "删除图片失败！",
-                                SnackBarUtil.CONFIRM
-                            ).show()
-                            if (it) {
-                                picture_detial_rv?.postDelayed({
-                                    finishAfterTransition()
-                                }, 1000)
-                            }
-                        }
+                        showConfirmDialog(this)
                     }
                 }
             }
@@ -222,6 +215,9 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
                         isShowDialog = true
                         picture_detail_iv?.isGraffiti = true
                     }
+                    "添加文本" ->{
+
+                    }
                     "完成" -> {
                         reset()
                     }
@@ -267,5 +263,29 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
             return
         }
         super.onBackPressed()
+    }
+
+    /**
+     * 弹出是否删除
+     */
+    private fun showConfirmDialog(context: Activity?) {
+        AlertDialogUtil.showAlertDialog(context, "确定删除吗？", "取消", "确定",
+            DialogInterface.OnClickListener { dialog, _ ->
+                dialog.dismiss()
+            },
+            DialogInterface.OnClickListener { _, _ ->
+                SdCardUtil.deleteFile(path) {
+                    SnackBarUtil.shortSnackBar(
+                        picture_detail_iv,
+                        if (it) "删除图片成功" else "删除图片失败！",
+                        SnackBarUtil.CONFIRM
+                    ).show()
+                    if (it) {
+                        picture_detial_rv?.postDelayed({
+                            finishAfterTransition()
+                        }, 1000)
+                    }
+                }
+            })
     }
 }
