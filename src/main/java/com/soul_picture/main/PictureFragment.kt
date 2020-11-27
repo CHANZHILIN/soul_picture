@@ -62,7 +62,7 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
             mutableListOf(),
             R.layout.layout_item_picture,
             { _, holder, item ->
-                val width = ScreenUtils.instance.getScreenWidth() //获取屏幕宽度
+                val width = ScreenUtils.screenWidth //获取屏幕宽度
                 val params = holder.itemView.item_picture_iv_image.layoutParams
                 //设置图片的相对于屏幕的宽高比
                 params.width =

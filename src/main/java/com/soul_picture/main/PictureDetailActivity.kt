@@ -40,14 +40,15 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
 
     private lateinit var data: java.util.ArrayList<String>
     var path = ""
-    override fun preSetContentView() {
+    override fun isTransparentPage(): Boolean  = true
+/*    override fun preSetContentView() {
         super.preSetContentView()
         //透明状态栏
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //透明导航栏
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 
-    }
+    }*/
 
 
     override fun initData() {
