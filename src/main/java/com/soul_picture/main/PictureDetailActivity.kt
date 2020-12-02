@@ -39,7 +39,7 @@ class PictureDetailActivity : BaseViewModelActivity<EmptyViewModel>() {
     private var isShowDialog = false
 
     private lateinit var data: java.util.ArrayList<String>
-    var path = ""
+    private var path = ""
     override fun isTransparentPage(): Boolean  = true
 /*    override fun preSetContentView() {
         super.preSetContentView()
