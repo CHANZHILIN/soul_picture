@@ -3,6 +3,7 @@
 
     <application>
         <activity android:name=".main.PictureDetailActivity" />
+        <activity android:name=".main.gif.LoadGifActivity"/>
     </application>
 
 </manifest>
