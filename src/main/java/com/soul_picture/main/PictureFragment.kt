@@ -139,7 +139,7 @@ class PictureFragment : BaseViewModelFragment<PictureViewModel>() {
             val pictureViewModel = PictureViewModel()
             pictureViewModel.getPictureListData().observe(this, Observer {
                 it?.run {
-                    singleAdapter?.replaceData(it)
+                    singleAdapter?.addData(it)
                     fragment_picture_refresh_layout.isRefreshing = false
 
                     lifecycle.removeObserver(pictureViewModel)
