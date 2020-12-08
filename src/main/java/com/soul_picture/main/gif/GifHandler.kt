@@ -25,11 +25,13 @@ class GifHandler {
 
     fun getWidth(): Int = getWidth(longGifHandler)
     fun getHeight(): Int = getHeight(longGifHandler)
+    fun getTotalFrame():Int = getTotalFrame(longGifHandler)
 
     private external fun loadGif(path: String): Long
 
     private external fun getWidth(longGifHandler: Long): Int
     private external fun getHeight(longGifHandler: Long): Int
+    private external fun getTotalFrame(longGifHandler: Long): Int
 
     private external fun updateFrame(bitmap: Bitmap, longGifHandler: Long): Int
 }

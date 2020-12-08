@@ -1,24 +1,25 @@
 package com.soul_picture.main.gif
 
+import android.Manifest
 import android.graphics.Bitmap
-import android.os.Environment
 import android.os.Handler
+import android.view.View
 import android.widget.SeekBar
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.kotlin_baselib.api.Constants
+import com.kotlin_baselib.base.BaseToolbarViewModelActivity
 import com.kotlin_baselib.base.BaseViewModelActivity
 import com.kotlin_baselib.base.EmptyViewModel
 import com.kotlin_baselib.utils.MyLog
+import com.kotlin_baselib.utils.PermissionUtils
 import com.kotlin_baselib.utils.SdCardUtil.DEFAULT_PHOTO_PATH
 import com.kotlin_baselib.utils.onClick
 import com.soul_picture.R
 import kotlinx.android.synthetic.main.activity_load_gif.*
-import kotlinx.android.synthetic.main.activity_picture_detail.*
-import kotlinx.android.synthetic.main.dialog_brush_bottom.*
 import java.io.File
 
 @Route(path = Constants.GIF_PICTURE_ACTIVITY_PATH)
-class LoadGifActivity : BaseViewModelActivity<EmptyViewModel>() {
+class LoadGifActivity : BaseToolbarViewModelActivity<EmptyViewModel>() {
 
 
     override fun providerVMClass(): Class<EmptyViewModel> = EmptyViewModel::class.java
@@ -39,9 +40,12 @@ class LoadGifActivity : BaseViewModelActivity<EmptyViewModel>() {
 
     override fun getResId(): Int = R.layout.activity_load_gif
 
-    override fun isTransparentPage(): Boolean = true
-    override fun initData() {
+    override fun setToolbarTitle(): String?  = "GIF"
 
+    override fun isTransparentPage(): Boolean = false
+
+    override fun initData() {
+        PermissionUtils.permission(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE).request()
     }
 
     override fun initListener() {
@@ -54,7 +58,7 @@ class LoadGifActivity : BaseViewModelActivity<EmptyViewModel>() {
                 fromUser: Boolean
             ) {
                 delay_time = progress
-                btn_load?.text = "延迟时间${delay_time}ms"
+                tv_delay_time?.text = "帧播放延迟时间：${delay_time}ms"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -70,10 +74,13 @@ class LoadGifActivity : BaseViewModelActivity<EmptyViewModel>() {
             gifHandler = GifHandler().load(file.absolutePath)
             val bitmapWidth = gifHandler.getWidth()
             val bitmapHeight = gifHandler.getHeight()
-            MyLog.e("gifWidth=${bitmapWidth},gifHeight=${bitmapHeight}")
+            MyLog.e("gifWidth=${bitmapWidth},gifHeight=${bitmapHeight},totalFrame=${gifHandler.getTotalFrame()}")
             gifBitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
             val delay = gifHandler.updateFrame(gifBitmap)
             handler.sendEmptyMessageDelayed(1, delay.toLong())
+            btn_load?.isEnabled = false
         }
     }
+
+
 }
