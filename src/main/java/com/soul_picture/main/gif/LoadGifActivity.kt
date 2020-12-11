@@ -3,12 +3,10 @@ package com.soul_picture.main.gif
 import android.Manifest
 import android.graphics.Bitmap
 import android.os.Handler
-import android.view.View
 import android.widget.SeekBar
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.kotlin_baselib.api.Constants
 import com.kotlin_baselib.base.BaseToolbarViewModelActivity
-import com.kotlin_baselib.base.BaseViewModelActivity
 import com.kotlin_baselib.base.EmptyViewModel
 import com.kotlin_baselib.utils.MyLog
 import com.kotlin_baselib.utils.PermissionUtils
@@ -19,19 +17,20 @@ import kotlinx.android.synthetic.main.activity_load_gif.*
 import java.io.File
 
 @Route(path = Constants.GIF_PICTURE_ACTIVITY_PATH)
-class LoadGifActivity : BaseToolbarViewModelActivity<EmptyViewModel>() {
+class LoadGifActivity : BaseToolbarViewModelActivity<EmptyViewModel>(),
+    PermissionUtils.PermissionCallBack {
 
 
     override fun providerVMClass(): Class<EmptyViewModel> = EmptyViewModel::class.java
 
-    private var delay_time = 40
+    private var delayTime = 40
     private lateinit var gifBitmap: Bitmap
     private lateinit var gifHandler: GifHandler
-    val handler: Handler = Handler {
+    private val handler: Handler = Handler {
         when (it.what) {
             1 -> {
                 val delay = gifHandler.updateFrame(gifBitmap)
-                it.target.sendEmptyMessageDelayed(1, delay.toLong() + delay_time)
+                it.target.sendEmptyMessageDelayed(1, delay.toLong() + delayTime)
                 iv_gif.setImageBitmap(gifBitmap)
             }
         }
@@ -40,12 +39,13 @@ class LoadGifActivity : BaseToolbarViewModelActivity<EmptyViewModel>() {
 
     override fun getResId(): Int = R.layout.activity_load_gif
 
-    override fun setToolbarTitle(): String?  = "GIF"
-
-    override fun isTransparentPage(): Boolean = false
+    override fun setToolbarTitle(): String? = "GIF"
 
     override fun initData() {
-        PermissionUtils.permission(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE).request()
+        PermissionUtils.permission(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ).callBack(this).request()
     }
 
     override fun initListener() {
@@ -57,8 +57,8 @@ class LoadGifActivity : BaseToolbarViewModelActivity<EmptyViewModel>() {
                 progress: Int,
                 fromUser: Boolean
             ) {
-                delay_time = progress
-                tv_delay_time?.text = "帧播放延迟时间：${delay_time}ms"
+                delayTime = progress
+                tv_delay_time?.text = "帧播放延迟时间：${delayTime}ms"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -72,6 +72,8 @@ class LoadGifActivity : BaseToolbarViewModelActivity<EmptyViewModel>() {
         btn_load?.onClick {
             val file = File(DEFAULT_PHOTO_PATH, "t-mac.gif")
             gifHandler = GifHandler().load(file.absolutePath)
+//            val bitmapWidth = ScreenUtils.screenWidth
+//            val bitmapHeight = bitmapWidth*gifHandler.getHeight()/gifHandler.getWidth()
             val bitmapWidth = gifHandler.getWidth()
             val bitmapHeight = gifHandler.getHeight()
             MyLog.e("gifWidth=${bitmapWidth},gifHeight=${bitmapHeight},totalFrame=${gifHandler.getTotalFrame()}")
@@ -80,6 +82,12 @@ class LoadGifActivity : BaseToolbarViewModelActivity<EmptyViewModel>() {
             handler.sendEmptyMessageDelayed(1, delay.toLong())
             btn_load?.isEnabled = false
         }
+    }
+
+    override fun onGranted(permissionUtils: PermissionUtils) {
+    }
+
+    override fun onDenied(permissionUtils: PermissionUtils) {
     }
 
 
